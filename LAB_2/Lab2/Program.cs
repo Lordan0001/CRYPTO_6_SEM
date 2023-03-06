@@ -41,55 +41,55 @@ namespace Lab2
                         {
                             Console.Clear();
                             EntropyChecker italianChecker = new EntropyChecker(italianAlphabet, 0, "Итальянский");
-                            EntropyChecker ukranianChecker = new EntropyChecker(bulgarianAlphabet, 0, "Болгарский");
+                            EntropyChecker bulgarianChecker = new EntropyChecker(bulgarianAlphabet, 0, "Болгарский");
 
                             string italianText = italianChecker.OpenDocument("italian.txt").ReadToEnd().ToLower();
-                            string ukranianText = italianChecker.OpenDocument("bulgarian.txt").ReadToEnd().ToLower();
+                            string bulgarianText = italianChecker.OpenDocument("bulgarian.txt").ReadToEnd().ToLower();
 
                             Regex regex = new Regex(@"\W");
                             italianText = regex.Replace(italianText, "");
-                            ukranianText = regex.Replace(ukranianText, "");
+                            bulgarianText = regex.Replace(bulgarianText, "");
 
                             Dictionary<char, int> italianDict = italianChecker.alphabetListToDictionary();
-                            Dictionary<char, int> ukranianDict = ukranianChecker.alphabetListToDictionary();
+                            Dictionary<char, int> bulgarianDict = bulgarianChecker.alphabetListToDictionary();
 
                             italianChecker.getSymbolsCounts(italianText, italianDict);
-                            ukranianChecker.getSymbolsCounts(ukranianText, ukranianDict);
+                            bulgarianChecker.getSymbolsCounts(bulgarianText, bulgarianDict);
 
-                            Dictionary<char, double> chancesGolland = italianChecker.getSymbolsChances(italianText, italianDict);
-                            Dictionary<char, double> chancesUkranian = ukranianChecker.getSymbolsChances(ukranianText, ukranianDict);
+                            Dictionary<char, double> chancesItalian = italianChecker.getSymbolsChances(italianText, italianDict);
+                            Dictionary<char, double> chancesBulgarian = bulgarianChecker.getSymbolsChances(bulgarianText, bulgarianDict);
 
-                            italianChecker.computeTextEntropy(chancesGolland);
-                            ukranianChecker.computeTextEntropy(chancesUkranian);
+                            italianChecker.computeTextEntropy(chancesItalian);
+                            bulgarianChecker.computeTextEntropy(chancesBulgarian);
 
 
                             italianChecker.printAlphabet();
-                            italianChecker.printChances(chancesGolland);
+                            italianChecker.printChances(chancesItalian);
                             italianChecker.printAlhabetEntropy();
 
 
-                            ukranianChecker.printAlphabet();
-                            ukranianChecker.printChances(chancesUkranian);
-                            ukranianChecker.printAlhabetEntropy();
+                            bulgarianChecker.printAlphabet();
+                            bulgarianChecker.printChances(chancesBulgarian);
+                            bulgarianChecker.printAlhabetEntropy();
 
-                            double sumGolland = 0;
-                            double sumUkranian = 0;
-                            foreach (KeyValuePair<char, double> x in chancesGolland)
+                            double sumItalian = 0;
+                            double sumBulgarian = 0;
+                            foreach (KeyValuePair<char, double> x in chancesItalian)
                             {
-                                sumGolland += x.Value;
+                                sumItalian += x.Value;
                             }
-                            foreach (KeyValuePair<char, double> x in chancesUkranian)
+                            foreach (KeyValuePair<char, double> x in chancesBulgarian)
                             {
-                                sumUkranian += x.Value;
+                                sumBulgarian += x.Value;
                             }
 
-                            Console.WriteLine($"Сумма шансов для болгарского языка: {sumUkranian}");
-                            Console.WriteLine($"Сумма шансов для итальянского языка: {sumGolland}");
+                            Console.WriteLine($"Сумма шансов для болгарского языка: {sumBulgarian}");
+                            Console.WriteLine($"Сумма шансов для итальянского языка: {sumItalian}");
 
                             ExcelDocumentCreator<char,double> excel = new ExcelDocumentCreator<char, double>(new System.IO.FileInfo(fileName));
                             excel.createWorksheet("first");
-                            excel.addValuesFromDict(chancesGolland, "first", 0);
-                            excel.addValuesFromDict(chancesUkranian, "first", 3);
+                            excel.addValuesFromDict(chancesItalian, "first", 0);
+                            excel.addValuesFromDict(chancesBulgarian, "first", 3);
                             excel.pack.Save();
                             Console.ReadKey();
                             break;
@@ -99,17 +99,17 @@ namespace Lab2
                             Console.Clear();
 
                             EntropyChecker italianChecker = new EntropyChecker(new List<char>(){ '0', '1' }, 0, "Бинарный код");
-                            EntropyChecker ukranianChecker = new EntropyChecker(new List<char>() { '0', '1' }, 0, "Бинарный код");
+                            EntropyChecker bulgarianChecker = new EntropyChecker(new List<char>() { '0', '1' }, 0, "Бинарный код");
 
                             string italianText = italianChecker.OpenDocument("italian.txt").ReadToEnd().ToLower();
-                            string ukranianText = italianChecker.OpenDocument("bulgarian.txt").ReadToEnd().ToLower();
+                            string bulgarianText = italianChecker.OpenDocument("bulgarian.txt").ReadToEnd().ToLower();
 
                             Regex regex = new Regex(@"\W");
                             italianText = regex.Replace(italianText, "");
-                            ukranianText = regex.Replace(ukranianText, "");
+                            bulgarianText = regex.Replace(bulgarianText, "");
 
                             string binTextItalian = "";
-                            string binTextUkrainian = "";
+                            string binTextBulgarian = "";
 
                             var textChr = Encoding.UTF8.GetBytes(italianText);
                             foreach (int chr in textChr)
@@ -117,52 +117,52 @@ namespace Lab2
                                 binTextItalian += Convert.ToString(chr, 2).PadLeft(8, '0');
                             }
 
-                            textChr = Encoding.UTF8.GetBytes(ukranianText);
+                            textChr = Encoding.UTF8.GetBytes(bulgarianText);
                             foreach (int chr in textChr)
                             {
-                                binTextUkrainian += Convert.ToString(chr, 2).PadLeft(8, '0');
+                                binTextBulgarian += Convert.ToString(chr, 2).PadLeft(8, '0');
                             }
 
-                            Dictionary<char, int> golladnDict = italianChecker.alphabetListToDictionary();
-                            Dictionary<char, int> ukranianDict = ukranianChecker.alphabetListToDictionary();
+                            Dictionary<char, int> italianDict = italianChecker.alphabetListToDictionary();
+                            Dictionary<char, int> BulgarianDict = bulgarianChecker.alphabetListToDictionary();
 
-                            italianChecker.getSymbolsCounts(binTextItalian, golladnDict);
-                            ukranianChecker.getSymbolsCounts(binTextUkrainian, ukranianDict);
+                            italianChecker.getSymbolsCounts(binTextItalian, italianDict);
+                            bulgarianChecker.getSymbolsCounts(binTextBulgarian, BulgarianDict);
 
-                            Dictionary<char, double> chancesGolland = italianChecker.getSymbolsChances(binTextItalian, golladnDict);
-                            Dictionary<char, double> chancesUkranian = ukranianChecker.getSymbolsChances(binTextUkrainian, ukranianDict);
+                            Dictionary<char, double> chancesItalian = italianChecker.getSymbolsChances(binTextItalian, italianDict);
+                            Dictionary<char, double> chancesBulgarian = bulgarianChecker.getSymbolsChances(binTextBulgarian, BulgarianDict);
 
-                            italianChecker.computeTextEntropy(chancesGolland);
-                            ukranianChecker.computeTextEntropy(chancesUkranian);
+                            italianChecker.computeTextEntropy(chancesItalian);
+                            bulgarianChecker.computeTextEntropy(chancesBulgarian);
 
 
                             italianChecker.printAlphabet();
-                            italianChecker.printChances(chancesGolland);
+                            italianChecker.printChances(chancesItalian);
                             italianChecker.printAlhabetEntropy();
 
 
-                            ukranianChecker.printAlphabet();
-                            ukranianChecker.printChances(chancesUkranian);
-                            ukranianChecker.printAlhabetEntropy();
+                            bulgarianChecker.printAlphabet();
+                            bulgarianChecker.printChances(chancesBulgarian);
+                            bulgarianChecker.printAlhabetEntropy();
 
-                            double sumGolland = 0;
-                            double sumUkranian = 0;
-                            foreach (KeyValuePair<char, double> x in chancesGolland)
+                            double sumItalian = 0;
+                            double sumBulgarian = 0;
+                            foreach (KeyValuePair<char, double> x in chancesItalian)
                             {
-                                sumGolland += x.Value;
+                                sumItalian += x.Value;
                             }
-                            foreach (KeyValuePair<char, double> x in chancesUkranian)
+                            foreach (KeyValuePair<char, double> x in chancesBulgarian)
                             {
-                                sumUkranian += x.Value;
+                                sumBulgarian += x.Value;
                             }
 
-                            Console.WriteLine($"Сумма шансов для болгарского языка: {sumUkranian}");
-                            Console.WriteLine($"Сумма шансов для итальянского языка: {sumGolland}");
+                            Console.WriteLine($"Сумма шансов для болгарского языка: {sumBulgarian}");
+                            Console.WriteLine($"Сумма шансов для итальянского языка: {sumItalian}");
 
                             ExcelDocumentCreator<char, double> excel = new ExcelDocumentCreator<char, double>(new System.IO.FileInfo(fileName));
                             excel.createWorksheet("second");
-                            excel.addValuesFromDict(chancesGolland, "second", 0);
-                            excel.addValuesFromDict(chancesUkranian, "second", 3);
+                            excel.addValuesFromDict(chancesItalian, "second", 0);
+                            excel.addValuesFromDict(chancesBulgarian, "second", 3);
                             excel.pack.Save();
 
                             Console.ReadKey();
@@ -173,15 +173,15 @@ namespace Lab2
                             Console.Clear();
 
                             EntropyChecker italianChecker = new EntropyChecker(italianAlphabet, 0, "Итальянский");
-                            EntropyChecker ukranianChecker = new EntropyChecker(bulgarianAlphabet, 0, "Болгарский");
+                            EntropyChecker bulgarianChecker = new EntropyChecker(bulgarianAlphabet, 0, "Болгарский");
                             EntropyChecker italianCheckerBin = new EntropyChecker(new List<char>() { '0', '1' }, 0, "Бинарный код (итальянский)");
-                            EntropyChecker ukranianCheckerBin = new EntropyChecker(new List<char>() { '0', '1' }, 0, "Бинарный код (болгарский)");
+                            EntropyChecker bulgarianCheckerBin = new EntropyChecker(new List<char>() { '0', '1' }, 0, "Бинарный код (болгарский)");
 
                             string italianText = "belitskyvladislavdmitrievich";
-                            string ukranianText = "белицкивладиславдмиртиевич";
+                            string bulgarianText = "белицкивладиславдмиртиевич";
 
                             string binTextItalian = "";
-                            string binTextUkrainian = "";
+                            string binTextBulgarian = "";
 
                             var textChr = Encoding.UTF8.GetBytes(italianText);
                             foreach (int chr in textChr)
@@ -189,31 +189,31 @@ namespace Lab2
                                 binTextItalian += Convert.ToString(chr, 2).PadLeft(8, '0');
                             }
 
-                            textChr = Encoding.UTF8.GetBytes(ukranianText);
+                            textChr = Encoding.UTF8.GetBytes(bulgarianText);
                             foreach (int chr in textChr)
                             {
-                                binTextUkrainian += Convert.ToString(chr, 2).PadLeft(8, '0');
+                                binTextBulgarian += Convert.ToString(chr, 2).PadLeft(8, '0');
                             }
 
-                            Dictionary<char, int> golladnDict = italianChecker.alphabetListToDictionary();
-                            Dictionary<char, int> ukranianDict = ukranianChecker.alphabetListToDictionary();
-                            Dictionary<char, int> golladnDictBin = italianCheckerBin.alphabetListToDictionary();
-                            Dictionary<char, int> ukranianDictBin = ukranianCheckerBin.alphabetListToDictionary();
+                            Dictionary<char, int> italianDict = italianChecker.alphabetListToDictionary();
+                            Dictionary<char, int> bulgarianDict = bulgarianChecker.alphabetListToDictionary();
+                            Dictionary<char, int> italianDictBin = italianCheckerBin.alphabetListToDictionary();
+                            Dictionary<char, int> bulgarianDictBin = bulgarianCheckerBin.alphabetListToDictionary();
 
-                            italianChecker.getSymbolsCounts(italianText, golladnDict);
-                            ukranianChecker.getSymbolsCounts(ukranianText, ukranianDict);
-                            italianCheckerBin.getSymbolsCounts(binTextItalian, golladnDictBin);
-                            ukranianCheckerBin.getSymbolsCounts(binTextUkrainian, ukranianDictBin);
+                            italianChecker.getSymbolsCounts(italianText, italianDict);
+                            bulgarianChecker.getSymbolsCounts(bulgarianText, bulgarianDict);
+                            italianCheckerBin.getSymbolsCounts(binTextItalian, italianDictBin);
+                            bulgarianCheckerBin.getSymbolsCounts(binTextBulgarian, bulgarianDictBin);
 
-                            Dictionary<char, double> chancesItalian = italianChecker.getSymbolsChances(italianText, golladnDict);
-                            Dictionary<char, double> chancesUkranian = ukranianChecker.getSymbolsChances(ukranianText, ukranianDict);
-                            Dictionary<char, double> chancesItalianBin = italianCheckerBin.getSymbolsChances(binTextItalian, golladnDictBin);
-                            Dictionary<char, double> chancesUkranianBin = ukranianCheckerBin.getSymbolsChances(binTextUkrainian, ukranianDictBin);
+                            Dictionary<char, double> chancesItalian = italianChecker.getSymbolsChances(italianText, italianDict);
+                            Dictionary<char, double> chancesBulgarian = bulgarianChecker.getSymbolsChances(bulgarianText, bulgarianDict);
+                            Dictionary<char, double> chancesItalianBin = italianCheckerBin.getSymbolsChances(binTextItalian, italianDictBin);
+                            Dictionary<char, double> chancesBulgarianBin = bulgarianCheckerBin.getSymbolsChances(binTextBulgarian, bulgarianDictBin);
 
                             italianChecker.computeTextEntropy(chancesItalian);
-                            ukranianChecker.computeTextEntropy(chancesUkranian);
+                            bulgarianChecker.computeTextEntropy(chancesBulgarian);
                             italianCheckerBin.computeTextEntropy(chancesItalianBin);
-                            ukranianCheckerBin.computeTextEntropy(chancesUkranianBin);
+                            bulgarianCheckerBin.computeTextEntropy(chancesBulgarianBin);
 
 
                             italianChecker.printAlphabet();
@@ -222,11 +222,11 @@ namespace Lab2
 
                             Console.WriteLine($"Количество информации сообщения. Язык - {italianChecker.AlphabetName}: {italianChecker.AlphabetEntropy *italianText.Length}");
 
-                            ukranianChecker.printAlphabet();
-                            ukranianChecker.printChances(chancesUkranian);
-                            ukranianChecker.printAlhabetEntropy();
+                            bulgarianChecker.printAlphabet();
+                            bulgarianChecker.printChances(chancesBulgarian);
+                            bulgarianChecker.printAlhabetEntropy();
 
-                            Console.WriteLine($"Количество информации сообщения. Язык - {ukranianChecker.AlphabetName}: {ukranianChecker.AlphabetEntropy * ukranianText.Length}");
+                            Console.WriteLine($"Количество информации сообщения. Язык - {bulgarianChecker.AlphabetName}: {bulgarianChecker.AlphabetEntropy * bulgarianText.Length}");
 
                             italianCheckerBin.printAlphabet();
                             italianCheckerBin.printChances(chancesItalianBin);
@@ -234,46 +234,46 @@ namespace Lab2
 
                             Console.WriteLine($"Количество информации сообщения. Язык - {italianCheckerBin.AlphabetName}: {italianCheckerBin.AlphabetEntropy * binTextItalian.Length}");
 
-                            ukranianCheckerBin.printAlphabet();
-                            ukranianCheckerBin.printChances(chancesUkranianBin);
-                            ukranianCheckerBin.printAlhabetEntropy();
+                            bulgarianCheckerBin.printAlphabet();
+                            bulgarianCheckerBin.printChances(chancesBulgarianBin);
+                            bulgarianCheckerBin.printAlhabetEntropy();
 
-                            Console.WriteLine($"Количество информации сообщения. Язык - {ukranianCheckerBin.AlphabetName}: {ukranianCheckerBin.AlphabetEntropy * binTextUkrainian.Length}");
+                            Console.WriteLine($"Количество информации сообщения. Язык - {bulgarianCheckerBin.AlphabetName}: {bulgarianCheckerBin.AlphabetEntropy * binTextBulgarian.Length}");
 
 
-                            double sumGolland = 0;
-                            double sumUkranian = 0;
+                            double sumItalian = 0;
+                            double sumBulgarian = 0;
                             double sumItalianBin = 0;
-                            double sumUkranianBin = 0;
+                            double sumBulgarianBin = 0;
                             foreach (KeyValuePair<char, double> x in chancesItalian)
                             {
-                                sumGolland += x.Value;
+                                sumItalian += x.Value;
                             }
-                            foreach (KeyValuePair<char, double> x in chancesUkranian)
+                            foreach (KeyValuePair<char, double> x in chancesBulgarian)
                             {
-                                sumUkranian += x.Value;
+                                sumBulgarian += x.Value;
                             }
 
                             foreach (KeyValuePair<char, double> x in chancesItalianBin)
                             {
                                 sumItalianBin += x.Value;
                             }
-                            foreach (KeyValuePair<char, double> x in chancesUkranianBin)
+                            foreach (KeyValuePair<char, double> x in chancesBulgarianBin)
                             {
-                                sumUkranianBin += x.Value;
+                                sumBulgarianBin += x.Value;
                             }
 
-                            Console.WriteLine($"Сумма шансов для болгарского языка: {sumUkranian}");
-                            Console.WriteLine($"Сумма шансов для итальянского языка: {sumGolland}");
-                            Console.WriteLine($"Сумма шансов для болгарского языка (бинарный): {sumUkranianBin}");
+                            Console.WriteLine($"Сумма шансов для болгарского языка: {sumBulgarian}");
+                            Console.WriteLine($"Сумма шансов для итальянского языка: {sumItalian}");
+                            Console.WriteLine($"Сумма шансов для болгарского языка (бинарный): {sumBulgarianBin}");
                             Console.WriteLine($"Сумма шансов для итальянского языка (бинарный): {sumItalianBin}");
 
                             ExcelDocumentCreator<char, double> excel = new ExcelDocumentCreator<char, double>(new System.IO.FileInfo(fileName));
                             excel.createWorksheet("third");
                             excel.addValuesFromDict(chancesItalian, "third", 0);
-                            excel.addValuesFromDict(chancesUkranian, "third", 3);
+                            excel.addValuesFromDict(chancesBulgarian, "third", 3);
                             excel.addValuesFromDict(chancesItalianBin, "third", 5);
-                            excel.addValuesFromDict(chancesUkranianBin, "third", 7);
+                            excel.addValuesFromDict(chancesBulgarianBin, "third", 7);
                             excel.pack.Save();
 
 
@@ -285,13 +285,13 @@ namespace Lab2
                             Console.Clear();
 
                             EntropyChecker italianCheckerBin = new EntropyChecker(new List<char>() { '0', '1' }, 0, "Бинарный код (итальянский)");
-                            EntropyChecker ukranianCheckerBin = new EntropyChecker(new List<char>() { '0', '1' }, 0, "Бинарный код (болгарский)");
+                            EntropyChecker bulgarianCheckerBin = new EntropyChecker(new List<char>() { '0', '1' }, 0, "Бинарный код (болгарский)");
 
                             string italianText = "belitskyvladislavdmitrievich";
-                            string ukranianText = "белицкивладиславдмиртиевич";
+                            string bulgarianText = "белицкивладиславдмиртиевич";
 
                             string binTextItalian = "";
-                            string binTextUkrainian = "";
+                            string binTextBulgarian = "";
 
                             var textChr = Encoding.UTF8.GetBytes(italianText);
                             foreach (int chr in textChr)
@@ -299,35 +299,35 @@ namespace Lab2
                                 binTextItalian += Convert.ToString(chr, 2).PadLeft(8, '0');
                             }
 
-                            textChr = Encoding.UTF8.GetBytes(ukranianText);
+                            textChr = Encoding.UTF8.GetBytes(bulgarianText);
                             foreach (int chr in textChr)
                             {
-                                binTextUkrainian += Convert.ToString(chr, 2).PadLeft(8, '0');
+                                binTextBulgarian += Convert.ToString(chr, 2).PadLeft(8, '0');
                             }
 
-                            Dictionary<char, int> golladnDictBin = italianCheckerBin.alphabetListToDictionary();
-                            Dictionary<char, int> ukranianDictBin = ukranianCheckerBin.alphabetListToDictionary();
+                            Dictionary<char, int> italianDictBin = italianCheckerBin.alphabetListToDictionary();
+                            Dictionary<char, int> bulgarianDictBin = bulgarianCheckerBin.alphabetListToDictionary();
 
-                            italianCheckerBin.getSymbolsCounts(binTextItalian, golladnDictBin);
-                            ukranianCheckerBin.getSymbolsCounts(binTextUkrainian, ukranianDictBin);
+                            italianCheckerBin.getSymbolsCounts(binTextItalian, italianDictBin);
+                            bulgarianCheckerBin.getSymbolsCounts(binTextBulgarian, bulgarianDictBin);
 
-                            Dictionary<char, double> chancesGollandBin = italianCheckerBin.getSymbolsChances(binTextItalian, golladnDictBin);
-                            Dictionary<char, double> chancesUkranianBin = ukranianCheckerBin.getSymbolsChances(binTextUkrainian, ukranianDictBin);
+                            Dictionary<char, double> chancesItalianBin = italianCheckerBin.getSymbolsChances(binTextItalian, italianDictBin);
+                            Dictionary<char, double> chancesBulgarianBin = bulgarianCheckerBin.getSymbolsChances(binTextBulgarian, bulgarianDictBin);
 
                             italianCheckerBin.printAlphabet();
-                            italianCheckerBin.printChances(chancesGollandBin);
+                            italianCheckerBin.printChances(chancesItalianBin);
                             italianCheckerBin.printAlhabetEntropy();
-                            ukranianCheckerBin.printAlphabet();
-                            ukranianCheckerBin.printChances(chancesUkranianBin);
-                            ukranianCheckerBin.printAlhabetEntropy();
+                            bulgarianCheckerBin.printAlphabet();
+                            bulgarianCheckerBin.printChances(chancesBulgarianBin);
+                            bulgarianCheckerBin.printAlhabetEntropy();
 
-                            Console.WriteLine($"Ошибка = 0.1. Количество информации сообщения. Язык - {italianCheckerBin.AlphabetName}: {italianCheckerBin.computeTextEntropyWithError(chancesGollandBin, 0.1) * binTextItalian.Length}");
-                            Console.WriteLine($"Ошибка = 0.5. Количество информации сообщения. Язык - {italianCheckerBin.AlphabetName}: {italianCheckerBin.computeTextEntropyWithError(chancesGollandBin, 0.5) * binTextItalian.Length}");
-                            Console.WriteLine($"Ошибка = 0.9. Количество информации сообщения. Язык - {italianCheckerBin.AlphabetName}: {italianCheckerBin.computeTextEntropyWithError(chancesGollandBin, 0.9) * binTextItalian.Length}");
+                            Console.WriteLine($"Ошибка = 0.1. Количество информации сообщения. Язык - {italianCheckerBin.AlphabetName}: {italianCheckerBin.computeTextEntropyWithError(chancesItalianBin, 0.1) * binTextItalian.Length}");
+                            Console.WriteLine($"Ошибка = 0.5. Количество информации сообщения. Язык - {italianCheckerBin.AlphabetName}: {italianCheckerBin.computeTextEntropyWithError(chancesItalianBin, 0.5) * binTextItalian.Length}");
+                            Console.WriteLine($"Ошибка = 0.9. Количество информации сообщения. Язык - {italianCheckerBin.AlphabetName}: {italianCheckerBin.computeTextEntropyWithError(chancesItalianBin, 0.9) * binTextItalian.Length}");
 
-                            Console.WriteLine($"Ошибка = 0.1. Количество информации сообщения. Язык - {ukranianCheckerBin.AlphabetName}: {ukranianCheckerBin.computeTextEntropyWithError(chancesUkranianBin,0.1) * binTextItalian.Length}");
-                            Console.WriteLine($"Ошибка = 0.5. Количество информации сообщения. Язык - {ukranianCheckerBin.AlphabetName}: {ukranianCheckerBin.computeTextEntropyWithError(chancesUkranianBin, 0.5) * binTextItalian.Length}");
-                            Console.WriteLine($"Ошибка = 0.9. Количество информации сообщения. Язык - {ukranianCheckerBin.AlphabetName}: {ukranianCheckerBin.computeTextEntropyWithError(chancesUkranianBin, 0.9) * binTextItalian.Length}");
+                            Console.WriteLine($"Ошибка = 0.1. Количество информации сообщения. Язык - {bulgarianCheckerBin.AlphabetName}: {bulgarianCheckerBin.computeTextEntropyWithError(chancesBulgarianBin,0.1) * binTextItalian.Length}");
+                            Console.WriteLine($"Ошибка = 0.5. Количество информации сообщения. Язык - {bulgarianCheckerBin.AlphabetName}: {bulgarianCheckerBin.computeTextEntropyWithError(chancesBulgarianBin, 0.5) * binTextItalian.Length}");
+                            Console.WriteLine($"Ошибка = 0.9. Количество информации сообщения. Язык - {bulgarianCheckerBin.AlphabetName}: {bulgarianCheckerBin.computeTextEntropyWithError(chancesBulgarianBin, 0.9) * binTextItalian.Length}");
 
 
                             Console.ReadKey();
