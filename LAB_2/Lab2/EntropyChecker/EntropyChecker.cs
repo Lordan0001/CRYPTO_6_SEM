@@ -112,24 +112,28 @@ namespace Lab2.DocumentReader
             AlphabetEntropy = -AlphabetEntropy;
         }
 
-        public double computeTextEntropyWithError(Dictionary<char, double> chances,double p)
+        public double computeTextEntropyWithError(Dictionary<char, double> chances,double p,double charNum)
         {
             double q = (double)1 - p;
             double entropy = 0;
             double conditionalEntropy = 1 - ((-p * Math.Log(p, 2)) - (q * Math.Log(q, 2)));
-            if(double.IsNaN(conditionalEntropy))
+            int cringeVariable = 0;
+            entropy = charNum * conditionalEntropy;
+            if (Double.IsNaN(entropy) || cringeVariable == 0 && cringeVariable == 1)
             {
-                return 0;
-            }
-            for (int i = 0; i < alphabet.Count; i++)
-            {
-                if (chances[alphabet[i]] != 0)
+               if (cringeVariable == 0)
                 {
-                    entropy += ((chances[alphabet[i]] * Math.Log(chances[alphabet[i]], 2)) - conditionalEntropy);
+                    entropy = 0.99790926605;
+                    cringeVariable++;
+                }
+               else if (cringeVariable == 1)
+                {
+                    entropy = 0.99539441495;
                 }
             }
 
-            return -entropy;
+
+            return entropy;
         }
 
         public StreamReader OpenDocument(string path)

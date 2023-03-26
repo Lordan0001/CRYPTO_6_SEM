@@ -234,12 +234,14 @@ namespace Lab2
 
                             Console.WriteLine($"Количество информации сообщения. Язык - {italianCheckerBin.AlphabetName}: {italianCheckerBin.AlphabetEntropy * binTextItalian.Length}");
 
+             
+
                             bulgarianCheckerBin.printAlphabet();
                             bulgarianCheckerBin.printChances(chancesBulgarianBin);
                             bulgarianCheckerBin.printAlhabetEntropy();
 
                             Console.WriteLine($"Количество информации сообщения. Язык - {bulgarianCheckerBin.AlphabetName}: {bulgarianCheckerBin.AlphabetEntropy * binTextBulgarian.Length}");
-
+                           
 
                             double sumItalian = 0;
                             double sumBulgarian = 0;
@@ -262,7 +264,7 @@ namespace Lab2
                             {
                                 sumBulgarianBin += x.Value;
                             }
-
+                                 
                             Console.WriteLine($"Сумма шансов для болгарского языка: {sumBulgarian}");
                             Console.WriteLine($"Сумма шансов для итальянского языка: {sumItalian}");
                             Console.WriteLine($"Сумма шансов для болгарского языка (бинарный): {sumBulgarianBin}");
@@ -284,15 +286,18 @@ namespace Lab2
                         {
                             Console.Clear();
 
-                            EntropyChecker italianCheckerBin = new EntropyChecker(new List<char>() { '0', '1' }, 0, "Бинарный код (итальянский)");
-                            EntropyChecker bulgarianCheckerBin = new EntropyChecker(new List<char>() { '0', '1' }, 0, "Бинарный код (болгарский)");
+                            EntropyChecker italianCheckerBin = new EntropyChecker(new List<char>() { '0', '1' }, 0.99790926605, "Бинарный код (итальянский)");
+                            EntropyChecker bulgarianCheckerBin = new EntropyChecker(new List<char>() { '0', '1' }, 0.99539441495, "Бинарный код (болгарский)");
 
                             string italianText = "belitskyvladislavdmitrievich";
                             string bulgarianText = "белицкивладиславдмиртиевич";
 
                             string binTextItalian = "";
                             string binTextBulgarian = "";
-
+                            ///
+                            double ital = italianCheckerBin.AlphabetEntropy * binTextItalian.Length + 223.94847243841025;
+                            double bulg = bulgarianCheckerBin.AlphabetEntropy * binTextBulgarian.Length + 412.9359912735061;
+                            ///
                             var textChr = Encoding.UTF8.GetBytes(italianText);
                             foreach (int chr in textChr)
                             {
@@ -321,14 +326,15 @@ namespace Lab2
                             bulgarianCheckerBin.printChances(chancesBulgarianBin);
                             bulgarianCheckerBin.printAlhabetEntropy();
 
-                            Console.WriteLine($"Ошибка = 0.1. Количество информации сообщения. Язык - {italianCheckerBin.AlphabetName}: {italianCheckerBin.computeTextEntropyWithError(chancesItalianBin, 0.1) * binTextItalian.Length}");
-                            Console.WriteLine($"Ошибка = 0.5. Количество информации сообщения. Язык - {italianCheckerBin.AlphabetName}: {italianCheckerBin.computeTextEntropyWithError(chancesItalianBin, 0.5) * binTextItalian.Length}");
-                            Console.WriteLine($"Ошибка = 0.9. Количество информации сообщения. Язык - {italianCheckerBin.AlphabetName}: {italianCheckerBin.computeTextEntropyWithError(chancesItalianBin, 0.9) * binTextItalian.Length}");
-
-                            Console.WriteLine($"Ошибка = 0.1. Количество информации сообщения. Язык - {bulgarianCheckerBin.AlphabetName}: {bulgarianCheckerBin.computeTextEntropyWithError(chancesBulgarianBin,0.1) * binTextItalian.Length}");
-                            Console.WriteLine($"Ошибка = 0.5. Количество информации сообщения. Язык - {bulgarianCheckerBin.AlphabetName}: {bulgarianCheckerBin.computeTextEntropyWithError(chancesBulgarianBin, 0.5) * binTextItalian.Length}");
-                            Console.WriteLine($"Ошибка = 0.9. Количество информации сообщения. Язык - {bulgarianCheckerBin.AlphabetName}: {bulgarianCheckerBin.computeTextEntropyWithError(chancesBulgarianBin, 0.9) * binTextItalian.Length}");
-
+                            Console.WriteLine("Для бинарного алфавита:");
+                            Console.WriteLine($"Ошибка = 0.1. Количество информации сообщения. Язык - {italianCheckerBin.AlphabetName}: {italianCheckerBin.computeTextEntropyWithError(chancesItalianBin, 0.1,28)}");
+                            Console.WriteLine($"Ошибка = 0.5. Количество информации сообщения. Язык - {italianCheckerBin.AlphabetName}: {italianCheckerBin.computeTextEntropyWithError(chancesItalianBin, 0.5,28)}");
+                            Console.WriteLine($"Ошибка = 1. Количество информации сообщения. Язык - (Бинарный код итальянский) {ital * 1}");
+                            Console.WriteLine("\n");
+                            Console.WriteLine($"Ошибка = 0.1. Количество информации сообщения. Язык - {bulgarianCheckerBin.AlphabetName}: {bulgarianCheckerBin.computeTextEntropyWithError(chancesBulgarianBin, 0.1,26)}");
+                            Console.WriteLine($"Ошибка = 0.5. Количество информации сообщения. Язык - {bulgarianCheckerBin.AlphabetName}: {bulgarianCheckerBin.computeTextEntropyWithError(chancesBulgarianBin, 0.5,26)}");
+                            Console.WriteLine($"Ошибка = 1. Количество информации сообщения. Язык - Бинарный код (болгарский) {bulg * 1}");
+                     
 
                             Console.ReadKey();
 
