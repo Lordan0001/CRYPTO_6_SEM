@@ -15,6 +15,7 @@ namespace Lab3
                 Console.WriteLine("3- Поиск простых чисел из диапазона");
                 Console.WriteLine("4- Каноническая форма");
                 Console.WriteLine("5- Проверим на простое");
+                Console.WriteLine("6- Решето Эратосфена");
 
                 if (!int.TryParse(Console.ReadLine(), out c))
                 {
@@ -147,6 +148,18 @@ namespace Lab3
                             Console.WriteLine("Не простое");
                         }
 
+                        break;
+
+                        case 6:
+                        Console.Clear();
+                        Console.Write("Первое число:");
+                        var m = Convert.ToUInt32(Console.ReadLine());
+                        Console.Write("Второе число: ");
+                        var n = Convert.ToUInt32(Console.ReadLine());
+                        var primeNumbers = NOD.SieveEratosthenes(m, n);
+                        Console.WriteLine("Простые числа до заданного {0}:", n);
+                        Console.WriteLine(string.Join(", ", primeNumbers));
+                        Console.ReadLine();                    
                         break;
                     case -1:
                         {

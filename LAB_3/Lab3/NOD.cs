@@ -118,5 +118,36 @@ namespace Lab3
             Console.WriteLine("n/ln(n) = " + n / Math.Log(n));
 
         }
+      public  static List<uint> SieveEratosthenes(uint m, uint n)
+        {
+            var numbers = new List<uint>();
+            //заполнение списка числами от 2 до n-1
+            for (var i = 2u; i < n; i++)
+            {
+                numbers.Add(i);
+            }
+
+            for (var i = 0; i < numbers.Count; i++)
+            {
+                for (var j = 2u; j < n; j++)
+                {
+                    //удаляем кратные числа из списка
+                    numbers.Remove(numbers[i] * j);
+                }
+            }
+            for (int i = 0; i < numbers.Count(); i++)
+            {
+                if (numbers[i] < m)
+                {
+                    numbers.RemoveAt(i);
+                    i--;
+                }
+            }
+            numbers.Add(n);
+            Console.WriteLine("Колличество чисел: "+numbers.Count);
+            return numbers;
+        }
+
+       
     }
 }
