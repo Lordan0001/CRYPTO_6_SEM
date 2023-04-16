@@ -14,6 +14,7 @@ namespace Lab3
                 Console.WriteLine("2- НОД трёх чисел");
                 Console.WriteLine("3- Поиск простых чисел из диапазона");
                 Console.WriteLine("4- Каноническая форма");
+                Console.WriteLine("5- Проверим на простое");
 
                 if (!int.TryParse(Console.ReadLine(), out c))
                 {
@@ -117,6 +118,7 @@ namespace Lab3
                                 Console.Clear();
                                 break;
                             }
+                            
                           
                          NOD.Canon(x);
                            
@@ -125,6 +127,27 @@ namespace Lab3
                             break;
 
                         }
+                    case 5:
+                        Console.Clear();
+                        int maybeSimple = 0;
+                        Console.Write("Введите число: ");
+                        if (!int.TryParse(Console.ReadLine(), out maybeSimple))
+                        {
+                            Console.Write("Ошибка!");
+                            Console.ReadKey();
+                            Console.Clear();
+                            break;
+                        }
+                        if(NOD.IsSimple(maybeSimple) == true)
+                        {
+                            Console.WriteLine("Простое");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Не простое");
+                        }
+
+                        break;
                     case -1:
                         {
                             Console.Clear();

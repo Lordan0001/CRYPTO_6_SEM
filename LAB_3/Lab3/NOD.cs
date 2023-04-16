@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,18 +26,40 @@ namespace Lab3
 
         }
 
+       
+
+
         public static  void Canon(int num)
         {
-            Console.Write("{0} = 1", num);
+            int numCopy = num;
+            Dictionary<int,int> CanonList = new ();
+        
             for (int i = 0; num % 2 == 0; num /= 2)
             {
-                Console.Write(" * {0}", 2);
+
+      
+                if(CanonList.ContainsKey(2))
+                {
+                    CanonList[2] += 1;
+                }
+                else
+                {
+                    CanonList.Add(2, 1);
+                }
             }
             for (int i = 3; i <= num;)
             {
                 if (num % i == 0)
                 {
-                    Console.Write(" * {0}", i);
+ 
+                    if (CanonList.ContainsKey(i))
+                    {
+                        CanonList[i] += 1;
+                    }
+                    else
+                    {
+                        CanonList.Add(i, 1);
+                    }
                     num /= i;
                 }
                 else
@@ -44,9 +67,21 @@ namespace Lab3
                     i += 2;
                 }
             }
+
+            Console.Write(numCopy + " = 1");
+
+            foreach (int key in CanonList.Keys)
+            {
+                Console.Write($" * {key}");
+                if(CanonList[key] != 1)
+                {
+                    Console.Write($"^{CanonList[key]}");
+                }
+            }
+
         }
 
-        private static bool IsSimple(int x)
+        public static bool IsSimple(int x)
         {
             for (int i = 2; Math.Pow(i, 2) <= x; i++)
             {
@@ -80,6 +115,7 @@ namespace Lab3
             }
             Console.WriteLine();
             Console.WriteLine($"Количество простых чисел: {counter}");
+            Console.WriteLine("n/ln(n) = " + n / Math.Log(n));
 
         }
     }
