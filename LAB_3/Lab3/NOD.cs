@@ -26,9 +26,7 @@ namespace Lab3
 
         }
 
-       
-
-
+      
         public static  void Canon(int num)
         {
             int numCopy = num;
@@ -117,7 +115,7 @@ namespace Lab3
             Console.WriteLine($"Количество простых чисел: {counter}");
             Console.WriteLine("n/ln(n) = " + n / Math.Log(n));
 
-        }
+    }
       public  static List<uint> SieveEratosthenes(uint m, uint n)
         {
             var numbers = new List<uint>();
@@ -146,7 +144,7 @@ namespace Lab3
             numbers.Add(n);
             Console.WriteLine("Колличество чисел: "+numbers.Count);
             return numbers;
-        }
+     }
 
        
     }
