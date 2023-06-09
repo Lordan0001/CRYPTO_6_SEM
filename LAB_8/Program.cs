@@ -1,31 +1,32 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Numerics;
 using System.Text;
 
-public class RSARandomGenerator
-{
-    private BigInteger p;
-    private BigInteger q;
-    private BigInteger n;
-    private BigInteger e;
-    private BigInteger x;
-
-    public RSARandomGenerator(BigInteger p, BigInteger q, BigInteger e, BigInteger x)
+    public class RSARandomGenerator
     {
-        this.p = p;
-        this.q = q;
-        this.n = p * q;
-        this.e = e;
-        this.x = x;
-    }
+        private BigInteger p;
+        private BigInteger q;
+        private BigInteger n;
+        private BigInteger e;
+        private BigInteger x;
 
-    public byte GenerateRandomBit()
-    {
-        x = BigInteger.ModPow(x, e, n);
-        byte randomBit = (byte)(x % 2);
-        return randomBit;
+        public RSARandomGenerator(BigInteger p, BigInteger q, BigInteger e, BigInteger x)
+        {
+            this.p = p;
+            this.q = q;
+            this.n = p * q;
+            this.e = e;
+            this.x = x;
+        }
+
+        public byte GenerateRandomBit()
+        {
+            x = BigInteger.ModPow(x, e, n);
+            byte randomBit = (byte)(x % 2);
+            return randomBit;
+        }
     }
-}
 
 class RC4
 {
@@ -118,12 +119,22 @@ public class Program
 
         RC4 rc4 = new RC4(key);
 
-        // Encryption
+        // Засекаем время зашифрования
+        Stopwatch encryptionTimer = Stopwatch.StartNew();
         byte[] ciphertext = rc4.Encrypt(plaintext);
-        Console.WriteLine("Зашифруем: " + BitConverter.ToString(ciphertext).Replace("-", ""));
+        encryptionTimer.Stop();
 
-        // Decryption
+        Console.WriteLine("Зашифровано: " + BitConverter.ToString(ciphertext).Replace("-", ""));
+
+        // Засекаем время расшифрования
+        Stopwatch decryptionTimer = Stopwatch.StartNew();
         byte[] decrypted = rc4.Decrypt(ciphertext);
-        Console.WriteLine("Расшифруем: " + Encoding.UTF8.GetString(plaintext));
+        decryptionTimer.Stop();
+
+        Console.WriteLine("Расшифровано: " + Encoding.UTF8.GetString(plaintext));
+
+        // Выводим время зашифрования и расшифрования в консоль
+        Console.WriteLine("Время зашифрования (RC4): " + encryptionTimer.Elapsed);
+        Console.WriteLine("Время расшифрования (RC4): " + decryptionTimer.Elapsed);
     }
 }
