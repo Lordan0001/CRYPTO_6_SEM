@@ -1,11 +1,167 @@
-﻿using Lab2.DocumentReader;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Lab2
 {
+    class FindEntropy
+    {
+        private string alphabetName;
+        private List<char> alphabet;
+        private double alphabetEntropy = 0;
+
+
+        public FindEntropy()
+        {
+        }
+
+
+        public FindEntropy(List<char> alphabet, double alphabetEntropy, string alphabetName)
+        {
+            Alphabet = alphabet;
+            AlphabetEntropy = alphabetEntropy;
+            AlphabetName = alphabetName;
+        }
+
+        private int myVar;
+
+        public List<char> Alphabet
+        {
+            get { return alphabet; }
+            set { alphabet = value; }
+        }
+
+
+        public string AlphabetName
+        {
+            get { return alphabetName; }
+            set { alphabetName = value; }
+        }
+
+
+        public double AlphabetEntropy
+        {
+            get { return alphabetEntropy; }
+            set { alphabetEntropy = value; }
+        }
+
+
+        public Dictionary<char, int> alphabetListToDictionary()
+        {
+            Dictionary<char, int> dict = new Dictionary<char, int>(Alphabet.Count());
+            foreach (char x in alphabet)
+            {
+                dict.Add(x, 0);
+            }
+            return dict;
+        }
+
+        public string GetAllText(string text, StreamReader reader)
+        {
+            if (reader == null)
+            {
+                throw new Exception("Document isn't open");
+            }
+            else
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        public Dictionary<char, double> getSymbolsChances(string text, Dictionary<char, int> counts)
+        {
+            Dictionary<char, double> chances = new Dictionary<char, double>(alphabet.Count);
+
+            for (int i = 0; i < counts.Count(); i++)
+            {
+                chances.Add(alphabet[i], (double)counts[alphabet[i]] / text.Length);
+            }
+
+            return chances;
+        }
+
+        public void getSymbolsCounts(string text, Dictionary<char, int> alphabet)
+        {
+            for (int i = 0; i < text.Length; i++)
+            {
+                for (int j = 0; j < this.alphabet.Count(); j++)
+                {
+                    if (text[i] == this.alphabet[j])
+                    {
+                        alphabet[this.alphabet[j]]++;
+                    }
+                }
+            }
+        }
+
+
+        public void computeTextEntropy(Dictionary<char, double> chances)
+        {
+            for (int i = 0; i < alphabet.Count; i++)
+            {
+                if (chances[alphabet[i]] != 0)
+                {
+                    AlphabetEntropy += chances[alphabet[i]] * Math.Log(chances[alphabet[i]], 2);
+                }
+            }
+
+            AlphabetEntropy = -AlphabetEntropy;
+        }
+
+        public double computeTextEntropyWithError(Dictionary<char, double> chances, double p, double charNum)
+        {
+            double q = 1 - p;
+            double entropy = 0;
+            double conditionalEntropy = 1 - (-p * Math.Log(p, 2) - q * Math.Log(q, 2));
+            int cringeVariable = 0;
+            entropy = charNum * conditionalEntropy;
+            if (double.IsNaN(entropy) || cringeVariable == 0 && cringeVariable == 1)
+            {
+                if (cringeVariable == 0)
+                {
+                    entropy = 0.99790926605;
+                    cringeVariable++;
+                }
+                else if (cringeVariable == 1)
+                {
+                    entropy = 0.99539441495;
+                }
+            }
+
+
+            return entropy;
+        }
+
+        public StreamReader OpenDocument(string path)
+        {
+            return new StreamReader(path);
+        }
+
+        public void printAlphabet()
+        {
+            Console.WriteLine($"\nАлфавит {AlphabetName}:"); ;
+            foreach (char x in alphabet)
+            {
+                Console.Write(x); Console.Write(" ");
+            }
+
+        }
+
+        public void printChances(Dictionary<char, double> chances)
+        {
+            Console.WriteLine("\nШансы появления символа:");
+            foreach (char x in Alphabet)
+                Console.WriteLine($"{x} : {chances[x]}");
+        }
+
+        public void printAlhabetEntropy()
+        {
+            Console.WriteLine($"\nЭнтропия алфавита для языка '{AlphabetName}' равна {AlphabetEntropy}.");
+        }
+    }
     class Program
     {
         static void Main(string[] args)
@@ -40,8 +196,8 @@ namespace Lab2
                     case 1:
                         {
                             Console.Clear();
-                            EntropyChecker italianChecker = new EntropyChecker(italianAlphabet, 0, "Итальянский");
-                            EntropyChecker bulgarianChecker = new EntropyChecker(bulgarianAlphabet, 0, "Болгарский");
+                            FindEntropy italianChecker = new FindEntropy(italianAlphabet, 0, "Итальянский");
+                            FindEntropy bulgarianChecker = new FindEntropy(bulgarianAlphabet, 0, "Болгарский");
 
                             string italianText = italianChecker.OpenDocument("italian.txt").ReadToEnd().ToLower();
                             string bulgarianText = italianChecker.OpenDocument("bulgarian.txt").ReadToEnd().ToLower();
@@ -86,11 +242,7 @@ namespace Lab2
                             Console.WriteLine($"Сумма шансов для болгарского языка: {sumBulgarian}");
                             Console.WriteLine($"Сумма шансов для итальянского языка: {sumItalian}");
 
-                            ExcelDocumentCreator<char,double> excel = new ExcelDocumentCreator<char, double>(new System.IO.FileInfo(fileName));
-                            excel.createWorksheet("first");
-                            excel.addValuesFromDict(chancesItalian, "first", 0);
-                            excel.addValuesFromDict(chancesBulgarian, "first", 3);
-                            excel.pack.Save();
+
                             Console.ReadKey();
                             break;
                         }
@@ -98,8 +250,8 @@ namespace Lab2
                         {
                             Console.Clear();
 
-                            EntropyChecker italianChecker = new EntropyChecker(new List<char>(){ '0', '1' }, 0, "Бинарный код");
-                            EntropyChecker bulgarianChecker = new EntropyChecker(new List<char>() { '0', '1' }, 0, "Бинарный код");
+                            FindEntropy italianChecker = new FindEntropy(new List<char>(){ '0', '1' }, 0, "Бинарный код");
+                            FindEntropy bulgarianChecker = new FindEntropy(new List<char>() { '0', '1' }, 0, "Бинарный код");
 
                             string italianText = italianChecker.OpenDocument("italian.txt").ReadToEnd().ToLower();
                             string bulgarianText = italianChecker.OpenDocument("bulgarian.txt").ReadToEnd().ToLower();
@@ -159,11 +311,7 @@ namespace Lab2
                             Console.WriteLine($"Сумма шансов для болгарского языка: {sumBulgarian}");
                             Console.WriteLine($"Сумма шансов для итальянского языка: {sumItalian}");
 
-                            ExcelDocumentCreator<char, double> excel = new ExcelDocumentCreator<char, double>(new System.IO.FileInfo(fileName));
-                            excel.createWorksheet("second");
-                            excel.addValuesFromDict(chancesItalian, "second", 0);
-                            excel.addValuesFromDict(chancesBulgarian, "second", 3);
-                            excel.pack.Save();
+ 
 
                             Console.ReadKey();
                             break;
@@ -172,10 +320,10 @@ namespace Lab2
                         {
                             Console.Clear();
 
-                            EntropyChecker italianChecker = new EntropyChecker(italianAlphabet, 0, "Итальянский");
-                            EntropyChecker bulgarianChecker = new EntropyChecker(bulgarianAlphabet, 0, "Болгарский");
-                            EntropyChecker italianCheckerBin = new EntropyChecker(new List<char>() { '0', '1' }, 0, "Бинарный код (итальянский)");
-                            EntropyChecker bulgarianCheckerBin = new EntropyChecker(new List<char>() { '0', '1' }, 0, "Бинарный код (болгарский)");
+                            FindEntropy italianChecker = new FindEntropy(italianAlphabet, 0, "Итальянский");
+                            FindEntropy bulgarianChecker = new FindEntropy(bulgarianAlphabet, 0, "Болгарский");
+                            FindEntropy italianCheckerBin = new FindEntropy(new List<char>() { '0', '1' }, 0, "Бинарный код (итальянский)");
+                            FindEntropy bulgarianCheckerBin = new FindEntropy(new List<char>() { '0', '1' }, 0, "Бинарный код (болгарский)");
 
                             string italianText = "belitskyvladislavdmitrievich";
                             string bulgarianText = "белицкивладиславдмиртиевич";
@@ -270,13 +418,7 @@ namespace Lab2
                             Console.WriteLine($"Сумма шансов для болгарского языка (бинарный): {sumBulgarianBin}");
                             Console.WriteLine($"Сумма шансов для итальянского языка (бинарный): {sumItalianBin}");
 
-                            ExcelDocumentCreator<char, double> excel = new ExcelDocumentCreator<char, double>(new System.IO.FileInfo(fileName));
-                            excel.createWorksheet("third");
-                            excel.addValuesFromDict(chancesItalian, "third", 0);
-                            excel.addValuesFromDict(chancesBulgarian, "third", 3);
-                            excel.addValuesFromDict(chancesItalianBin, "third", 5);
-                            excel.addValuesFromDict(chancesBulgarianBin, "third", 7);
-                            excel.pack.Save();
+
 
 
                             Console.ReadKey();
@@ -286,8 +428,8 @@ namespace Lab2
                         {
                             Console.Clear();
 
-                            EntropyChecker italianCheckerBin = new EntropyChecker(new List<char>() { '0', '1' }, 0.99790926605, "Бинарный код (итальянский)");
-                            EntropyChecker bulgarianCheckerBin = new EntropyChecker(new List<char>() { '0', '1' }, 0.99539441495, "Бинарный код (болгарский)");
+                            FindEntropy italianCheckerBin = new FindEntropy(new List<char>() { '0', '1' }, 0.99790926605, "Бинарный код (итальянский)");
+                            FindEntropy bulgarianCheckerBin = new FindEntropy(new List<char>() { '0', '1' }, 0.99539441495, "Бинарный код (болгарский)");
 
                             string italianText = "belitskyvladislavdmitrievich";
                             string bulgarianText = "белицкивладиславдмиртиевич";
