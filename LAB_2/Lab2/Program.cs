@@ -183,25 +183,21 @@ namespace Lab2
                     case 1:
                         {
                             tasks.FirstTask();
- 
                             break;
                         }
                     case 2:
                         {
                             tasks.SecondTask();
-    
                             break;
                         }
                     case 3:
                         {
                             tasks.ThirdTask();
-
                             break;
                         }
                     case 4:
                         {
                             tasks.FourthTask();
-
                             break;
                         }
                     default:
